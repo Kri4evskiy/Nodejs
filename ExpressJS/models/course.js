@@ -1,4 +1,4 @@
-const uuid = require('uuid/v1')
+const uuid = require('uuid/v4')
 const fs = require('fs')
 const path = require('path')
 
