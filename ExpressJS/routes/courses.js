@@ -4,6 +4,8 @@ const router = Router()
 
 router.get('/', async (req, res) => {
   const courses = await Course.find()
+    .populate('userId', 'email name')
+
   const fixedCourses = courses.map(i => i.toObject());
   res.render('courses', {
     title: 'Курсы',
@@ -32,7 +34,18 @@ router.post('/edit', async (req, res) => {
   res.redirect('/courses')
 })
 
+router.post('/remove', async (req, res) => {
+  try {
+    await Course.deleteOne({ _id: req.body.id })
+    res.redirect('/courses')
+  } catch(e) {
+    console.log(e)    
+  }  
+})
+
 router.get('/:id', async (req, res) => {
+  console.log(req.params.id);
+  
   const course = await Course.findById(req.params.id)
   res.render('course', {
     layout: 'empty',
