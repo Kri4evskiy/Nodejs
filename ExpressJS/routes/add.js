@@ -19,7 +19,12 @@ router.post('/', auth, courseValidators, async (req, res) => {
     return res.status(422).render('add', {
       title: 'Добавить курс',
       isAdd: true,
-      error: errors.array()[0].msg
+      error: errors.array()[0].msg,
+      data: {
+        title: req.body.title,
+        price: req.body.price,
+        img: req.body.img
+      }
     })
   }
 
