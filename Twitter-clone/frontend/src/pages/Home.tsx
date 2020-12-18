@@ -1,33 +1,21 @@
 import React from 'react'
-
-import classNames from 'classnames'
-
-import TwitterIcon from '@material-ui/icons/Twitter'
-import SearchIcon from '@material-ui/icons/Search'
-import NotificationsIcon from '@material-ui/icons/NotificationsNone'
-import BookmarkIcon from '@material-ui/icons/BookmarkBorder'
-import MessageIcon from '@material-ui/icons/MailOutline'
-import ListIcon from '@material-ui/icons/ListAlt'
-import UserIcon from '@material-ui/icons/PermIdentity'
-import RepeatIcon from '@material-ui/icons/Repeat'
-import CommentIcon from '@material-ui/icons/ModeCommentOutlined'
-import HeartIcon from '@material-ui/icons/FavoriteBorder'
-import ShareIcon from '@material-ui/icons/ReplyAllOutlined'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import {
-  Avatar,
   Container,
   createStyles,
-  IconButton,
   InputBase,
   makeStyles,
+  Theme,
   Typography,
   withStyles,
 } from '@material-ui/core'
 import gray from '@material-ui/core/colors/grey'
 
-const useHomeStyles = makeStyles(() => ({
+import { Tweet } from '../components/Tweet'
+import { SideMenu } from '../components/SideMenu'
+
+export const useHomeStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     height: '100vh',
   },
@@ -41,10 +29,31 @@ const useHomeStyles = makeStyles(() => ({
     listStyle: 'none',
     padding: 0,
     margin: 0,
+    width: 230,
   },
   sideMenuListItem: {
-    display: 'flex',
-    alignItems: 'center',
+    cursor: 'pointer',
+    '&:hover': {
+      '& div':{
+        backgroundColor: 'rgba(29, 161, 242, 0.1)',
+        '& h6': {
+          color: theme.palette.primary.main
+        },
+        '& svg path': {
+          fill: theme.palette.primary.main
+        }
+      }      
+    },
+    '& div': {
+      display: 'inline-flex',
+      alignItems: 'center',
+      position: 'relative',
+      padding: '0 25px 0 20px',
+      borderRadius: 30,
+      height: 50,
+      marginBottom: 15,
+      transition: 'background-color 0.1s ease-in-out'
+    },
   },
   sideMenuListItemLabel: {
     fontWeight: 700,
@@ -53,13 +62,24 @@ const useHomeStyles = makeStyles(() => ({
     marginLeft: 15,
   },
   sideMenuListItemIcon: {
-    fontSize: 28,
+    fontSize: 32,
+    marginLeft: '-5px'
+  },
+  sideMenuTweetButton: {
+    padding: theme.spacing(3.2),
+    marginTop: theme.spacing(2)
   },
   tweet: {
+    paddingTop: 15,
+    paddingLeft: 20,
     cursor: 'pointer',
-    "&:hover": {
-      backgroundColor: 'rgb(245,248,250)'
-    }
+    '&:hover': {
+      backgroundColor: 'rgb(245,248,250)',
+    },
+  },
+  tweetAvatar: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
   },
   tweetsWrapper: {
     borderRadius: 0,
@@ -79,8 +99,10 @@ const useHomeStyles = makeStyles(() => ({
   },
   tweetFooter: {
     display: 'flex',
+    position: 'relative',
+    left: -13,
     justifyContent: 'space-between',
-    width: 450
+    width: 450,
   },
   tweetUserName: {
     color: gray[500],
@@ -104,135 +126,27 @@ export const Home = () => {
     <Container className={classes.wrapper} maxWidth='lg'>
       <Grid container spacing={3}>
         <Grid item xs={3}>
-          <ul className={classes.sideMenuList}>
-            <li className={classes.sideMenuListItem}>
-              <IconButton
-                className={classes.logo}
-                aria-label=''
-                color='primary'
-              >
-                <TwitterIcon className={classes.logoIcon} />
-              </IconButton>
-            </li>
-            <li className={classes.sideMenuListItem}>
-              <IconButton aria-label=''>
-                <SearchIcon className={classes.sideMenuListItemIcon} />
-              </IconButton>
-              <Typography
-                className={classes.sideMenuListItemLabel}
-                variant='h6'
-              >
-                Поиск
-              </Typography>
-            </li>
-            <li className={classes.sideMenuListItem}>
-              <IconButton aria-label=''>
-                <NotificationsIcon className={classes.sideMenuListItemIcon} />
-              </IconButton>
-              <Typography
-                className={classes.sideMenuListItemLabel}
-                variant='h6'
-              >
-                Уведомления
-              </Typography>
-            </li>
-            <li className={classes.sideMenuListItem}>
-              <IconButton aria-label=''>
-                <MessageIcon className={classes.sideMenuListItemIcon} />
-              </IconButton>
-              <Typography
-                className={classes.sideMenuListItemLabel}
-                variant='h6'
-              >
-                Сообщения
-              </Typography>
-            </li>
-            <li className={classes.sideMenuListItem}>
-              <IconButton aria-label=''>
-                <BookmarkIcon className={classes.sideMenuListItemIcon} />
-              </IconButton>
-              <Typography
-                className={classes.sideMenuListItemLabel}
-                variant='h6'
-              >
-                Закладки
-              </Typography>
-            </li>
-            <li className={classes.sideMenuListItem}>
-              <IconButton aria-label=''>
-                <ListIcon className={classes.sideMenuListItemIcon} />
-              </IconButton>
-              <Typography
-                className={classes.sideMenuListItemLabel}
-                variant='h6'
-              >
-                Список
-              </Typography>
-            </li>
-            <li className={classes.sideMenuListItem}>
-              <IconButton aria-label=''>
-                <UserIcon className={classes.sideMenuListItemIcon} />
-              </IconButton>
-              <Typography
-                className={classes.sideMenuListItemLabel}
-                variant='h6'
-              >
-                Профиль
-              </Typography>
-            </li>
-            <li className={classes.sideMenuListItem}></li>
-          </ul>
+          <SideMenu classes={classes} />
         </Grid>
         <Grid item xs={6}>
           <Paper className={classes.tweetsWrapper} variant='outlined'>
             <Paper className={classes.tweetsHeader} variant='outlined'>
               <Typography variant='h6'>Главная</Typography>
             </Paper>
-            <Paper className={classNames(classes.tweetsHeader, classes.tweet)} variant='outlined'>
-              <Grid container spacing={3}>
-                <Grid item xs={1}>
-                  <Avatar
-                    alt='User Avatar'
-                    src='https://images.unsplash.com/photo-1564931768869-c66430fe1162?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-                  />
-                </Grid>
-                <Grid item xs={11}>
-                  <Typography>
-                    <b>Dude</b>
-                    <span className={classes.tweetUserName}>@dudetweetter</span>
-                  </Typography>
-                  <Typography variant='body1' gutterBottom>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Itaque sunt iste accusantium voluptatum deleniti molestias
-                    quia, maiores voluptatem error ullam in molestiae eveniet
-                    sequi ipsa autem incidunt debitis eos nulla!
-                  </Typography>
-                  <div className={classes.tweetFooter}>
-                    <div>
-                      <IconButton>
-                        <CommentIcon style={{ fontSize: 20 }} />
-                      </IconButton>
-                      <span>1</span>
-                    </div>
-                    <div>
-                      <IconButton>
-                        <RepeatIcon style={{ fontSize: 20 }} />
-                      </IconButton>
-                    </div>
-                    <div>
-                      <IconButton>
-                        <HeartIcon style={{ fontSize: 20 }} />
-                      </IconButton>
-                    </div>
-                    <div>
-                      <IconButton>
-                        <ShareIcon style={{ fontSize: 20 }} />
-                      </IconButton>
-                    </div>
-                  </div>
-                </Grid>
-              </Grid>
-            </Paper>
+            {[
+              ...new Array(20).fill(
+                <Tweet
+                  text='asdncnasd sdcnas;dc oihubc ere sxc  sd vwsdvcew sdcscsdc sdcsdcs sdcsdccgbt tgbx dfvui li'
+                  user={{
+                    fullname: 'Dude',
+                    username: 'dudecontact',
+                    avatarUrl:
+                      'https://cdn.pixabay.com/photo/2015/04/27/22/53/man-742766_960_720.jpg',
+                  }}
+                  classes={classes}
+                />
+              ),
+            ]}
           </Paper>
         </Grid>
         <Grid item xs={3}>
