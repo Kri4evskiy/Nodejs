@@ -10,7 +10,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import { useStylesSignIn } from '../pages/SignIn'
 
 interface ModalBlockProps {
-  title: string
+  title?: string
   children: React.ReactNode
   classes?: ReturnType<typeof useStylesSignIn>
   visible?: boolean
@@ -23,10 +23,9 @@ export const ModalBlock: React.FC<ModalBlockProps> = ({
   onClose,
   children,
 }: ModalBlockProps): React.ReactElement | null => {
-
-if (!visible) {
-  return null
-}
+  if (!visible) {
+    return null
+  }
 
   return (
     <Dialog

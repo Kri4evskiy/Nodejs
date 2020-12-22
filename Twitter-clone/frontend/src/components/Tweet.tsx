@@ -1,4 +1,4 @@
-import { Avatar, Grid, IconButton, Paper, Typography } from '@material-ui/core'
+import { Avatar, IconButton, Paper, Typography } from '@material-ui/core'
 import React from 'react'
 import RepeatIcon from '@material-ui/icons/Repeat'
 import CommentIcon from '@material-ui/icons/ModeCommentOutlined'
@@ -6,7 +6,7 @@ import HeartIcon from '@material-ui/icons/FavoriteBorder'
 import ShareIcon from '@material-ui/icons/ReplyAllOutlined'
 
 import classNames from 'classnames'
-import { useHomeStyles } from '../pages/Home'
+import { useHomeStyles } from '../pages/Home/theme'
 
 interface TweetProps {
   text: string
@@ -28,15 +28,13 @@ export const Tweet: React.FC<TweetProps> = ({
       className={classNames(classes.tweetsHeader, classes.tweet)}
       variant='outlined'
     >
-      <Grid container spacing={3}>
-        <Grid item xs={1}>
+      
           <Avatar
             className={classes.tweetAvatar}
             alt={`Аватарка пользователя ${user.fullname}`}
             src={user.avatarUrl}
           />
-        </Grid>
-        <Grid item xs={11}>
+       
           <Typography>
             <b>{user.fullname}</b>&nbsp;
             <span className={classes.tweetUserName}>@{user.username}</span>&nbsp;
@@ -69,8 +67,7 @@ export const Tweet: React.FC<TweetProps> = ({
               </IconButton>
             </div>
           </div>
-        </Grid>
-      </Grid>
+
     </Paper>
   )
 }
