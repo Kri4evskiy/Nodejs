@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Grid from '@material-ui/core/Grid'
 
 import {
@@ -12,8 +12,9 @@ import {
   ListItemText,
   List,
   Button,
-  Paper
+  Paper,
 } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { Tweet } from '../../components/Tweet'
 import { SideMenu } from '../../components/SideMenu'
@@ -23,11 +24,20 @@ import PersonAddIcon from '@material-ui/icons/PersonAddOutlined'
 import { AddTweetForm } from '../../components/AddTweetForm'
 import { useHomeStyles } from './theme'
 import { SearchTextField } from '../../components/SearchTextfield'
-
-
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchTweets } from '../../store/ducks/tweets/actionCreators'
+import { selectIsTweetsLoading, selectTweetsItems } from '../../store/ducks/tweets/selectors'
 
 export const Home = (): React.ReactElement => {
+  const dispatch = useDispatch()
   const classes = useHomeStyles()
+  const tweets = useSelector(selectTweetsItems)
+  const isLoading = useSelector(selectIsTweetsLoading)
+
+  useEffect(() => {
+    dispatch(fetchTweets())
+  }, [dispatch])
+
   return (
     <Container className={classes.wrapper} maxWidth='lg'>
       <Grid container spacing={3}>
@@ -40,23 +50,23 @@ export const Home = (): React.ReactElement => {
               <Typography variant='h6'>Главная</Typography>
             </Paper>
             <Paper>
-              <div className={classes.addForm}><AddTweetForm classes={classes} /></div>
+              <div className={classes.addForm}>
+                <AddTweetForm classes={classes} />
+              </div>
               <div className={classes.addFormBottomLine} />
             </Paper>
-            {[
-              ...new Array(20).fill(
+            {isLoading ? (
+              <div className={classes.tweetsCentred}><CircularProgress color='secondary' /></div>
+            ) : (
+              tweets.map((tweet) => (
                 <Tweet
-                  text='asdncnasd sdcnas;dc oihubc ere sxc  sd vwsdvcew sdcscsdc sdcsdcs sdcsdccgbt tgbx dfvui li'
-                  user={{
-                    fullname: 'Dude',
-                    username: 'dudecontact',
-                    avatarUrl:
-                      'https://cdn.pixabay.com/photo/2015/04/27/22/53/man-742766_960_720.jpg',
-                  }}
+                  key={tweet._id}
+                  text={tweet.text}
+                  user={tweet.user}
                   classes={classes}
                 />
-              ),
-            ]}
+              ))
+            )}
           </Paper>
         </Grid>
         <Grid item sm={3} md={3}>
@@ -74,7 +84,10 @@ export const Home = (): React.ReactElement => {
               fullWidth
             />
             <Paper className={classes.rightSideBlock}>
-              <Paper className={classes.rightSideBlock} variant='outlined'>
+              <Paper
+                className={classes.rightSideBlockHeader}
+                variant='outlined'
+              >
                 <b>Актуальные темы</b>
               </Paper>
               <List>
